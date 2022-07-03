@@ -1,13 +1,16 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
+  Request,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { IExpressRequest } from 'src/types/express-request.interface';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
-import { UserEntity } from './user.entity';
+import { IUserResponse } from './types/user-response.interface';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -16,13 +19,22 @@ export class UsersController {
 
   @Post('signup')
   @UsePipes(new ValidationPipe())
-  createUser(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
-    return this.usersService.createUser(createUserDto);
+  async createUser(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<IUserResponse> {
+    const user = await this.usersService.createUser(createUserDto);
+    return this.usersService.buildUserResponse(user);
   }
 
   @Post('login')
   @UsePipes(new ValidationPipe())
-  loginUser(@Body() loginUserDto: LoginUserDto): Promise<UserEntity> {
-    return this.usersService.loginUser(loginUserDto);
+  async loginUser(@Body() loginUserDto: LoginUserDto): Promise<IUserResponse> {
+    const user = await this.usersService.loginUser(loginUserDto);
+    return this.usersService.buildUserResponse(user);
+  }
+
+  @Get('')
+  getUser(@Request() req: IExpressRequest) {
+    return req.user;
   }
 }

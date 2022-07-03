@@ -1,6 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { compare } from 'bcrypt';
+import { sign } from 'jsonwebtoken';
+import { JWT_SECRET } from 'src/constants';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
@@ -48,6 +50,14 @@ export class UsersService {
     return user;
   }
 
+  async findById(id: number): Promise<UserEntity> {
+    return this.userRepository.findOneBy({ id });
+  }
+
+  buildUserResponse(user: UserEntity) {
+    return { ...user, token: this.generateJwt(user) };
+  }
+
   private async checkCredentials({
     username,
     email,
@@ -56,11 +66,14 @@ export class UsersService {
     const userByEmail = await this.userRepository.findOneBy({ email });
 
     if (userByEmail || userByUsername) {
-      console.log(userByUsername, userByEmail);
       return new HttpException(
         'Username or Email are already taken',
         HttpStatus.UNPROCESSABLE_ENTITY,
       );
     }
+  }
+
+  private generateJwt({ id, email, username }: UserEntity) {
+    return sign({ id, email, username }, JWT_SECRET);
   }
 }
