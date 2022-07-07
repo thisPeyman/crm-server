@@ -58,9 +58,13 @@ export class WorkspaceService {
   }
 
   private async findById(id: number) {
-    return this.workspaceRepository.findOne({
+    const workspace = await this.workspaceRepository.findOne({
       where: { id },
       relations: { owner: true },
     });
+
+    if (!workspace)
+      throw new HttpException('Workspace not found', HttpStatus.NOT_FOUND);
+    return workspace;
   }
 }
