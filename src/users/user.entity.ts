@@ -1,5 +1,12 @@
 import { hash } from 'bcrypt';
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { WorkspaceEntity } from 'src/workspace/workspace.entity';
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity({ name: 'users' })
 export class UserEntity {
@@ -14,6 +21,9 @@ export class UserEntity {
 
   @Column({ select: false })
   password: string;
+
+  @OneToMany(() => WorkspaceEntity, (workspace) => workspace.owner)
+  workspaces: WorkspaceEntity[];
 
   @BeforeInsert()
   async hashPassword() {
