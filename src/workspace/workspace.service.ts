@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from 'src/users/user.entity';
 import { Repository } from 'typeorm';
@@ -32,5 +32,35 @@ export class WorkspaceService {
     });
 
     return userWithWorkspaces.workspaces;
+  }
+
+  async updateWorkspace(
+    workspaceId: number,
+    userId: number,
+    updateWorkspaceDto: CreateWorkspaceDto,
+  ): Promise<WorkspaceEntity> {
+    const workspace = await this.findById(workspaceId);
+
+    if (workspace.owner.id !== userId)
+      throw new HttpException('Not Authorized', HttpStatus.UNAUTHORIZED);
+
+    Object.assign(workspace, updateWorkspaceDto);
+    return this.workspaceRepository.save(workspace);
+  }
+
+  async deleteWorkspace(workspaceId: number, userId: number) {
+    const workspace = await this.findById(workspaceId);
+
+    if (workspace.owner.id !== userId)
+      throw new HttpException('Not Authorized', HttpStatus.UNAUTHORIZED);
+
+    return this.workspaceRepository.remove(workspace);
+  }
+
+  private async findById(id: number) {
+    return this.workspaceRepository.findOne({
+      where: { id },
+      relations: { owner: true },
+    });
   }
 }

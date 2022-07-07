@@ -1,8 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  Param,
   Post,
+  Put,
   UseGuards,
   UsePipes,
   ValidationPipe,
@@ -20,7 +23,7 @@ export class WorkspaceController {
   constructor(private workspaceService: WorkspaceService) {}
 
   @UsePipes(new ValidationPipe())
-  @Post('create')
+  @Post('')
   createWorkspace(
     @User() user: UserEntity,
     @Body() createWorkspaceDto: CreateWorkspaceDto,
@@ -31,5 +34,27 @@ export class WorkspaceController {
   @Get('')
   getWorkspaces(@User('id') userId: number): Promise<WorkspaceEntity[]> {
     return this.workspaceService.getWorkspaces(userId);
+  }
+
+  @Put(':id')
+  @UsePipes(new ValidationPipe())
+  updateWorkspace(
+    @Param('id') workspaceId: number,
+    @Body() updateWorkspaceDto: CreateWorkspaceDto,
+    @User('id') userId: number,
+  ) {
+    return this.workspaceService.updateWorkspace(
+      workspaceId,
+      userId,
+      updateWorkspaceDto,
+    );
+  }
+
+  @Delete(':id')
+  deleteWorkspace(
+    @Param('id') workspaceId: number,
+    @User('id') userId: number,
+  ) {
+    return this.workspaceService.deleteWorkspace(workspaceId, userId);
   }
 }
