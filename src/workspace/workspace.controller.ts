@@ -42,7 +42,7 @@ export class WorkspaceController {
     @Param('id') workspaceId: number,
     @Body() updateWorkspaceDto: CreateWorkspaceDto,
     @User('id') userId: number,
-  ) {
+  ): Promise<WorkspaceEntity> {
     return this.workspaceService.updateWorkspace(
       workspaceId,
       userId,
