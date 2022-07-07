@@ -4,12 +4,14 @@ import {
   Get,
   Post,
   Request,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
 import { IExpressRequest } from 'src/types/express-request.interface';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
+import { AuthGuard } from './guards/auth.guard';
 import { IUserResponse } from './types/user-response.interface';
 import { UsersService } from './users.service';
 
@@ -33,6 +35,7 @@ export class UsersController {
     return this.usersService.buildUserResponse(user);
   }
 
+  @UseGuards(AuthGuard)
   @Get('')
   getUser(@Request() req: IExpressRequest) {
     return req.user;

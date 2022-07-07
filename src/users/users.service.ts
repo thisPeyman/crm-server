@@ -6,6 +6,7 @@ import { JWT_SECRET } from 'src/constants';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
+import { IUserResponse } from './types/user-response.interface';
 import { UserEntity } from './user.entity';
 
 @Injectable()
@@ -54,7 +55,7 @@ export class UsersService {
     return this.userRepository.findOneBy({ id });
   }
 
-  buildUserResponse(user: UserEntity) {
+  buildUserResponse(user: UserEntity): IUserResponse {
     return { ...user, token: this.generateJwt(user) };
   }
 
