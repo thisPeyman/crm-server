@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
   UseGuards,
   UsePipes,
@@ -10,6 +11,7 @@ import { User } from 'src/users/decorators/user.decorator';
 import { AuthGuard } from 'src/users/guards/auth.guard';
 import { UserEntity } from 'src/users/user.entity';
 import { CreateWorkspaceDto } from './dto/create-workspace.dto';
+import { WorkspaceEntity } from './workspace.entity';
 import { WorkspaceService } from './workspace.service';
 
 @UseGuards(AuthGuard)
@@ -22,7 +24,12 @@ export class WorkspaceController {
   createWorkspace(
     @User() user: UserEntity,
     @Body() createWorkspaceDto: CreateWorkspaceDto,
-  ) {
+  ): Promise<WorkspaceEntity> {
     return this.workspaceService.createWorkspace(user, createWorkspaceDto);
+  }
+
+  @Get('')
+  getWorkspaces(@User('id') userId: number): Promise<WorkspaceEntity[]> {
+    return this.workspaceService.getWorkspaces(userId);
   }
 }

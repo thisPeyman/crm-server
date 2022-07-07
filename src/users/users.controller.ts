@@ -3,12 +3,10 @@ import {
   Controller,
   Get,
   Post,
-  Request,
   UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { IExpressRequest } from 'src/types/express-request.interface';
 import { User } from './decorators/user.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';

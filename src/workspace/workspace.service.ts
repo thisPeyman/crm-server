@@ -10,6 +10,8 @@ export class WorkspaceService {
   constructor(
     @InjectRepository(WorkspaceEntity)
     private workspaceRepository: Repository<WorkspaceEntity>,
+    @InjectRepository(UserEntity)
+    private userRepository: Repository<UserEntity>,
   ) {}
 
   async createWorkspace(
@@ -21,5 +23,14 @@ export class WorkspaceService {
     newWorkspace.owner = user;
 
     return this.workspaceRepository.save(newWorkspace);
+  }
+
+  async getWorkspaces(userId: number): Promise<WorkspaceEntity[]> {
+    const userWithWorkspaces = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: { workspaces: true },
+    });
+
+    return userWithWorkspaces.workspaces;
   }
 }
