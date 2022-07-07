@@ -10,9 +10,10 @@ import { AppService } from './app.service';
 import { config } from './orm-config';
 import { AuthMiddleware } from './users/middlewares/auth.middleware';
 import { UsersModule } from './users/users.module';
+import { WorkspaceModule } from './workspace/workspace.module';
 
 @Module({
-  imports: [UsersModule, TypeOrmModule.forRoot(config)],
+  imports: [UsersModule, TypeOrmModule.forRoot(config), WorkspaceModule],
   controllers: [AppController],
   providers: [AppService],
 })
