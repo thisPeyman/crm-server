@@ -4,9 +4,11 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { BoardEntity } from './board/entities/board.entity';
 
 @Entity({ name: 'workspaces' })
 export class WorkspaceEntity {
@@ -24,4 +26,7 @@ export class WorkspaceEntity {
 
   @ManyToOne(() => UserEntity, (user) => user.workspaces)
   owner: UserEntity;
+
+  @OneToMany(() => BoardEntity, (board) => board.workspace)
+  boards: BoardEntity[];
 }
