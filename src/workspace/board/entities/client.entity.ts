@@ -1,4 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { BoardEntity } from './board.entity';
 
 @Entity({ name: 'clients' })
@@ -12,7 +18,7 @@ export class ClientEntity {
   @Column()
   status: string;
 
-  @Column()
+  @CreateDateColumn()
   date: Date;
 
   @ManyToOne(() => BoardEntity, (project) => project.clients)

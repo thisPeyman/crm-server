@@ -20,7 +20,7 @@ export class BoardEntity {
   @CreateDateColumn()
   createdAt: Date;
 
-  @OneToMany(() => ClientEntity, (client) => client.board)
+  @OneToMany(() => ClientEntity, (client) => client.board, { eager: true })
   clients: ClientEntity[];
 
   @ManyToOne(() => WorkspaceEntity, (workspace) => workspace.boards)
